@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String          @id @default(cuid())
+  githubId        String          @unique
+  username        String          @unique
+  name            String?
+  image           String?
+  profileIsPublic Boolean         @default(false)
+  progress        ProgressEntry[]
+  events          SolveEvent[]
+  createdAt       DateTime        @default(now())
+}
+
+model Problem {
+  id           String   @id
+  section      String
+  topic        String
+  name         String
+  difficulty   String
+  leetcodeUrl  String?
+  gfgUrl       String?
+  orderIndex   Int?
+  progress     ProgressEntry[]
+  events       SolveEvent[]
+}
+
+model ProgressEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  problemId   String
+  category    String?
+  solved      Boolean  @default(false)
+  withHint    Boolean  @default(false)
+  notes       String?
+  lastTouched DateTime?
+
+  user    User    @relation(fields: [userId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+
+  @@unique([userId, problemId])
+}
+
+model SolveEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  problemId String
+  category  String?
+  timestamp DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+}
