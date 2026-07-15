@@ -2,6 +2,9 @@
   "name": "dsa-tracker",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },  
   "scripts": {
     "dev": "next dev",
     "prisma:generate": "prisma generate",
