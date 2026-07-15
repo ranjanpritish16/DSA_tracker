@@ -8,15 +8,24 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(cuid())
-  githubId        String          @unique
-  username        String          @unique
-  name            String?
-  image           String?
-  profileIsPublic Boolean         @default(false)
-  progress        ProgressEntry[]
-  events          SolveEvent[]
-  createdAt       DateTime        @default(now())
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+
+  githubId       String?   @unique
+  username       String?   @unique
+
+  profileIsPublic Boolean @default(false)
+
+  accounts Account[]
+  sessions Session[]
+
+  progress ProgressEntry[]
+  events   SolveEvent[]
+
+  createdAt DateTime @default(now())
 }
 
 model Problem {
@@ -57,4 +66,41 @@ model SolveEvent {
 
   user    User    @relation(fields: [userId], references: [id])
   problem Problem @relation(fields: [problemId], references: [id])
+}
+
+model Account {
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionToken])
+}
+
+model VerificationToken {
+  identifier String
+  token      String @unique
+  expires    DateTime
+
+  @@id([identifier, token])
 }

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import GithubSignInButton from "@/components/GithubSignInButton";
 
 export default function LoginPage() {
   return (
@@ -15,13 +15,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-10 space-y-4">
-            <Link
-              href="/tracker"
-              className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100"
-            >
-              <span>🐙</span>
-              Continue with GitHub
-            </Link>
+            <GithubSignInButton />
 
             <div className="rounded-3xl border border-line bg-panel2 p-4 text-center text-xs uppercase tracking-[0.2em] text-dim">
               Secured access
